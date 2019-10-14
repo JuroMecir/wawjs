@@ -1,40 +1,41 @@
-/*global describe:true,it:true,	after:true,before:true,afterEach:true,beforeEach:true */
+/*global describe:true,it:true, after:true,before:true,afterEach:true,beforeEach:true */
 const assert = require("assert");
 
 describe("03-functions", function() {
   it("1. define function using FunctionDeclaration", function() {
-    function f(a, b, c)
-    {
-    	if (c)
-    	{
-    		return a + b + c;
-    	}
-    	return a + b;
+    function f (a,b,c){
+      if (!c)
+        return  a+b;
+      return a+b+c;
     }
+    //
+    //
+    //
     assert(typeof f === "function");
     assert(f("a", "b") === "ab");
     assert(f("a", "b", "c") === "abc");
   });
   it("2. define function using FunctionExpression", function() {
-    var f = function(a, b, c) {
-    	if (c)
-    	{
-    		return a + b + c;
-    	}
-    	return a + b;
-	};
+    var f = function f (a,b,c) {
+      if (!c)
+        return  a+b;
+      return a+b+c;
+    }
+    //
+    //
+    //
     assert(typeof f === "function");
     assert(f("a", "b") === "ab");
     assert(f("a", "b", "c") === "abc");
   });
   it("3. define function using ArrowFunctionExpression", function() {
-    var f = (a, b, c) => {
-    	if (c)
-    	{
-    		return a + b + c;
-    	}
-    	return a + b;
-	};
+    var f = (a,b,c) =>{
+      if (!c)
+        return  a+b;
+      return a+b+c;
+
+    }
+
     assert(typeof f === "function");
     assert(f("a", "b") === "ab");
     assert(f("a", "b", "c") === "abc");
@@ -42,9 +43,8 @@ describe("03-functions", function() {
   it("4. define method using function expression", function() {
     var o = {
       c: "c",
-      m: function(a, b)
-      {
-      	return a + b + this.c;
+       m : function (a,b){
+        return a+b+this.c;
       }
     };
     assert(typeof o.m === "function");
@@ -63,9 +63,11 @@ describe("03-functions", function() {
       }
     }
     assert(
+      // TODO: fix the method call
       soundMachine.play.call(dog) === "haf"
     );
     assert(
+      // TODO: fix the method call
       soundMachine.play.call(cat) === "meau"
     );
   });
@@ -110,20 +112,15 @@ describe("03-functions", function() {
       let r = x * 2;
       return r;
     }
-    // TODO: ktory z asertov bude platit
-    //assert(f(100) === 20);
+
     assert(f(100) === 200);
 
     assert(Object.is(f(),NaN));
-    //assert(Object.is(f(),20));
   });
   it("11. Implementujte funkciu spravajucu sa podla poctu parametrov", function() {
     function calc() {
-      if (arguments.length % 2)
-      {
-      	return "err";
-      }
-      return "ok";
+      let arr = Array.apply(null, arguments);
+      return (arr.length) % 2 ? "err" : "ok";
     };
     assert(calc(1, 2) === "ok");
     assert(calc(1, 2, 3) === "err");
@@ -131,14 +128,11 @@ describe("03-functions", function() {
   });
   it("12. Implementujte funkciu z troma alebo siestimi parametrami", function() {
     const calc = (...numbers) => {
-      if (numbers.length === 3 || numbers.length === 6)
-      {
-      	return Math.max(...numbers);
+      if (numbers.length === 3 || numbers.length === 6) {
+        return Math.max(...numbers);
+      } else {
+        throw new TypeError;
       }
-      else
-  	  {
-  		throw new TypeError();
-  	  }
     };
     assert(calc(1, 2, 3) === 3);
     assert(calc(1, 2, 3, 5, 2, 3) === 5);
@@ -159,21 +153,12 @@ describe("03-functions", function() {
     // ak by mala mat takuto syntax
     // teda formalne 3 paramere a 3 optional
     const calc = (a, b, c, ...others) => {
-      if (a) others.push(a);
-      if (b) others.push(b);
-      if (c) others.push(c);
-      if (a === 0 || a === null) others.push(0);
-      if (b === 0 || b === null) others.push(0);
-      if (c === 0 || c === null) others.push(0);
-      
-      if (others.length === 3 || others.length === 6)
-      {
-      	return Math.max(...others);
-      }
-      else
-  	  {
-  		throw new TypeError();
-  	  }
+      if ((a !== undefined && b !== undefined && c !== undefined && others.length === 0) || (others.length === 3)) {
+        return Math.max(a,b,c,...others);
+      } else {
+        throw new TypeError;
+    }
+
     };
     // asserty su zhodne z predoslym
     assert(calc(1, 2, 3) === 3);
@@ -197,24 +182,19 @@ describe("03-functions", function() {
     function printValue() {
       return this.value;
     }
-    // vyberte 3 spravne moznosti volania funkcie
-    // otazka zo skusky minuly rok
 
-    //assert(printValue(o)===1);
     assert(printValue.call(o)===1);
     assert(printValue.apply(o)===1);
-    //assert(printValue.call(null, [o])===1);
-    //assert(printValue.bind(o)===1);
     assert(printValue.bind(o)()===1);
+
   });
   it("15. prefix a sufix", function() {
 
     function Formatter(prefix, sufix) {
       this.prefix = prefix;
       this.sufix = sufix;
-      this.format = function(text)
-      {
-      	return this.prefix + text + this.sufix;
+      this.format = function(str) {
+        return `${this.prefix}${str}${this.sufix}`;
       }
     }
     let f1 = new Formatter("'", "'");
@@ -229,36 +209,37 @@ describe("03-functions", function() {
   it("16. prefix a sufix (using closure)", function() {
 
     function formater(prefix, sufix) {
-      return function(text) {
-        return prefix + text + sufix;
+      return function(str) {
+        return `${prefix}${str}${sufix}`;
       }
     }
     let format1 = formater("'", "'");
     assert(format1("text") === "'text'");
 
-    let format2 = formater("xxx", "xxx");
-    assert(format2("text") === "xxxtextxxx");
+    let format2 = formater("xxx", "yyy");
+    assert(format2("text") === "xxxtextyyy");
 
   });
   it("17. prefix a sufix (using closure)", function() {
 
     function formater() {
-      const funct = function (text)
-      {
-      	return funct.prefix + text + funct.sufix
+      const res = function (str) {
+        return `${res.prefix}${str}${res.sufix}`;
       };
 
-      funct.prefix = arguments[0];
-      funct.sufix = arguments[1];
-      return funct;
+      res.prefix = arguments[0];
+      res.sufix = arguments[1];
+
+      return res;
     }
     let format1 = formater("'", "'");
     assert(format1("text") === "'text'");
 
-    let format2 = formater("xxx", "xxx");
-    assert(format2("text") === "xxxtextxxx");
+    let format2 = formater("xxx", "yyy");
+    assert(format2("text") === "xxxtextyyy");
 
     format2.sufix = "zzz";
-    assert(format2("text") === "xxxtextzzz");
+    //format2("TEXT");
+    assert(format2("TEXT") === "xxxTEXTzzz");
   });
 });
