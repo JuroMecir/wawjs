@@ -3,7 +3,7 @@ const path = require("path")
 
 module.exports = lsRescursive
 
-function lsRescursive(dirName) {
+async function lsRescursive(dirName) {
 
   return ls(dirName)
     .then(dirsOnly)
