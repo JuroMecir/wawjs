@@ -1,5 +1,5 @@
-const fileName = `${__dirname}/data.txt`;
-const fileName2 = `${__dirname}/data.gz`;
+const fileName = `${__dirname}/jahoda.txt`;
+const fileName2 = `${__dirname}/asdds.gz`;
 
 const fs = require("fs");
 let input = fs.createReadStream(fileName);

@@ -22,6 +22,8 @@ const isNumber = (any) => typeof any === "number" && any === any;
 
 // 5. ale napisme to takto:
 const maxNumber = fn(Math.max, isNumber);
+const minNumber = fn(Math.min, isNumber);
+
 
 // 6. a teraz podla sampla kodnite tieto funkcie
 // dole v teste je napisane ake spravanie ocakavame
