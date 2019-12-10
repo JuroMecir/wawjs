@@ -1,4 +1,4 @@
-const bom = require("../../src/bom");
+const bom = require("../../src/bom/bom.0.1.0.js");
 
 const assert = require("assert");
 const fs = require("fs");
